@@ -15,39 +15,51 @@ const totalWidth = 960;
 
 // console.log(mainDiv);
 
-// Function to create a grid based on user input
 function createGrid(size) {
     // Clear the existing grid
     mainDiv.innerHTML = '';
 
     const squareSize = totalWidth / size;
 
-    // Create grid boxes according to the user input
     for (let i = 0; i < size * size; i++) {
         const squareDiv = document.createElement('div');
         squareDiv.style.width = squareSize + 'px';
         squareDiv.style.height = squareSize + 'px';
         squareDiv.style.border = '1px solid black';
+        squareDiv.style.opacity = 0.1;
+        squareDiv.setAttribute('data-opacity', '0.1');
 
-        // Add hover effect to change the background color
-        squareDiv.addEventListener('mouseover', function() {
-            squareDiv.style.backgroundColor = 'blue';
+        squareDiv.addEventListener('mouseover', function () {
+            const randomColor = `rgb(${Math.floor(Math.random() * 256)}, 
+                                    ${Math.floor(Math.random() * 256)}, 
+                                    ${Math.floor(Math.random() * 256)})`;
+
+            squareDiv.style.backgroundColor = randomColor;
+
+            // Increase opacity by 10% for each hover
+            let currentOpacity = parseFloat(squareDiv.getAttribute('data-opacity'));
+            if (currentOpacity < 1) {
+                currentOpacity += 0.1;
+                squareDiv.setAttribute('data-opacity', currentOpacity.toFixed(1));
+                squareDiv.style.opacity = currentOpacity;
+            }
         });
 
         mainDiv.appendChild(squareDiv);
     }
 }
 
-// Function to handle the button click and grid resizing
-document.getElementById('resizeButton').addEventListener('click', function() {
-    let gridSize = prompt('Enter the number of squares per side (max 100):');
-
-    gridSize = parseInt(gridSize);
-    if (gridSize > 0 && gridSize <= 100) {
-        createGrid(gridSize);
+// Add the event listener for grid resizing
+const resizeButton = document.getElementById('resizeButton');
+resizeButton.addEventListener('click', function () {
+    let newSize = prompt("Enter new grid size (up to 100):");
+    newSize = parseInt(newSize);
+    if (newSize && newSize > 0 && newSize <= 100) {
+        createGrid(newSize);
     } else {
-        alert('Please enter a valid number between 1 and 100.');
+        alert("Invalid size. Please enter a number between 1 and 100.");
     }
 });
 
+// Initialize the default grid size
 createGrid(16);
