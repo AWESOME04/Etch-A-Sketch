@@ -1,57 +1,51 @@
 const mainDiv = document.getElementById('container');
-const totalWidth = 960;
+const colorPicker = document.getElementById('colorPicker');
+const eraserButton = document.getElementById('eraserButton');
+const clearButton = document.getElementById('clearButton');
+const resizeButton = document.getElementById('resizeButton');
 
-// create a 16 x 16 grid and add event listener
-// for(i = 0; i < 257; i++){
-//     const squareDiv = document.createElement('div');
-
-//     squareDiv.addEventListener('mouseover', changeColor);
-//     function changeColor(e){
-//         squareDiv.style.backgroundColor = 'black';
-//     }
-
-//     mainDiv.appendChild(squareDiv);
-// }
-
-// console.log(mainDiv);
+let currentColor = '#000000';
+let isErasing = false;
 
 function createGrid(size) {
-    // Clear the existing grid
     mainDiv.innerHTML = '';
-
-    const squareSize = totalWidth / size;
-
+    const squareSize = 600 / size;
     for (let i = 0; i < size * size; i++) {
         const squareDiv = document.createElement('div');
-        squareDiv.style.width = squareSize + 'px';
-        squareDiv.style.height = squareSize + 'px';
-        squareDiv.style.border = '1px solid black';
-        squareDiv.style.opacity = 0.1;
-        squareDiv.setAttribute('data-opacity', '0.1');
-
-        squareDiv.addEventListener('mouseover', function () {
-            const randomColor = `rgb(${Math.floor(Math.random() * 256)}, 
-                                    ${Math.floor(Math.random() * 256)}, 
-                                    ${Math.floor(Math.random() * 256)})`;
-
-            squareDiv.style.backgroundColor = randomColor;
-
-            // Increase opacity by 10% for each hover
-            let currentOpacity = parseFloat(squareDiv.getAttribute('data-opacity'));
-            if (currentOpacity < 1) {
-                currentOpacity += 0.1;
-                squareDiv.setAttribute('data-opacity', currentOpacity.toFixed(1));
-                squareDiv.style.opacity = currentOpacity;
-            }
-        });
-
+        squareDiv.style.width = `${squareSize}px`;
+        squareDiv.style.height = `${squareSize}px`;
+        squareDiv.addEventListener('mouseover', changeColor);
+        squareDiv.addEventListener('mousedown', changeColor);
         mainDiv.appendChild(squareDiv);
     }
 }
 
-// Add the event listener for grid resizing
-const resizeButton = document.getElementById('resizeButton');
-resizeButton.addEventListener('click', function () {
+function changeColor(e) {
+    if (e.buttons > 0) {
+        if (isErasing) {
+            e.target.style.backgroundColor = '';
+        } else {
+            e.target.style.backgroundColor = currentColor;
+        }
+    }
+}
+
+colorPicker.addEventListener('input', function() {
+    currentColor = this.value;
+    isErasing = false;
+});
+
+eraserButton.addEventListener('click', function() {
+    isErasing = !isErasing;
+    this.classList.toggle('active');
+});
+
+clearButton.addEventListener('click', function() {
+    const squares = mainDiv.querySelectorAll('div');
+    squares.forEach(square => square.style.backgroundColor = '');
+});
+
+resizeButton.addEventListener('click', function() {
     let newSize = prompt("Enter new grid size (up to 100):");
     newSize = parseInt(newSize);
     if (newSize && newSize > 0 && newSize <= 100) {
@@ -60,6 +54,9 @@ resizeButton.addEventListener('click', function () {
         alert("Invalid size. Please enter a number between 1 and 100.");
     }
 });
+
+// Prevent dragging
+mainDiv.addEventListener('dragstart', (e) => e.preventDefault());
 
 // Initialize the default grid size
 createGrid(16);

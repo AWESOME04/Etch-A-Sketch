@@ -3,24 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Eth-A-Sketch</title>
     <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
     <header>
-        <h1>Eth-A-Sketch</h1>
-        <button id="resizeButton">Change Grid Size</button>
+        <h1>Eth-A-Sketch Pro</h1>
     </header>
-
     <main>
+        <div class="controls">
+            <div class="color-picker">
+                <input type="color" id="colorPicker" value="#000000">
+                <label for="colorPicker">Choose Color</label>
+            </div>
+            <button id="eraserButton"><i class="fas fa-eraser"></i> Eraser</button>
+            <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear Grid</button>
+            <button id="resizeButton"><i class="fas fa-expand-alt"></i> Change Grid Size</button>
+        </div>
         <div id="container"></div>
     </main>
-
     <footer>
         <p>Created by Evans Acheampong | <a href="https://github.com/AWESOME04/Etch-A-Sketch" target="_blank">View on Github</a></p>
     </footer>
-    
     <script src="script.js"></script>
 </body>
 </html>
